@@ -146,7 +146,7 @@ func fillTaskTriggersObj(triggers []Trigger, triggersObj *ole.IDispatch) error {
 
 		repetitionObj := oleutil.MustGetProperty(triggerObj, "Repetition").ToIDispatch()
 		defer repetitionObj.Release()
-		oleutil.MustPutProperty(repetitionObj, "Duration", trigger.GetRepetitionDuration().String())
+		oleutil.MustPutProperty(repetitionObj, "Duration", PeriodToString(trigger.GetRepetitionDuration()))
 		oleutil.MustPutProperty(repetitionObj, "Interval", PeriodToString(trigger.GetRepetitionInterval()))
 		oleutil.MustPutProperty(repetitionObj, "StopAtDurationEnd", trigger.GetStopAtDurationEnd())
 
