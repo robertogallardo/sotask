@@ -4,12 +4,12 @@
 package sotask
 
 import (
+	ole "github.com/go-ole/go-ole"
+	"github.com/rickb777/date/period"
 	"strconv"
 	"strings"
 	"syscall"
 	"time"
-
-	"github.com/rickb777/date/period"
 )
 
 // DayOfWeek is a day of the week.
