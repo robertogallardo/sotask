@@ -6,7 +6,7 @@ package sotask
 import (
 	"errors"
 	"fmt"
-
+	ole "github.com/go-ole/go-ole"
 	"github.com/go-ole/go-ole/oleutil"
 )
 
