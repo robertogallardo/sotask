@@ -1,12 +1,12 @@
+//go:build windows
 // +build windows
 
-package taskmaster
+package sotask
 
 import (
 	"errors"
 	"fmt"
 
-	"github.com/go-ole/go-ole"
 	"github.com/go-ole/go-ole/oleutil"
 )
 

@@ -1,6 +1,7 @@
+//go:build windows
 // +build windows
 
-package taskmaster
+package sotask
 
 import (
 	"strings"
@@ -31,7 +32,7 @@ func TestCreateTask(t *testing.T) {
 	}
 	execTaskDef.AddAction(popCalc)
 
-	_, _, err = taskService.CreateTask("\\Taskmaster\\ExecAction", execTaskDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\ExecAction", execTaskDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -42,16 +43,7 @@ func TestCreateTask(t *testing.T) {
 		ClassID: "{F0001111-0000-0000-0000-0000FEEDACDC}",
 	})
 
-	_, _, err = taskService.CreateTask("\\Taskmaster\\ComHandlerAction", comHandlerDef, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// test BootTrigger
-	bootTriggerDef := taskService.NewTaskDefinition()
-	bootTriggerDef.AddAction(popCalc)
-	bootTriggerDef.AddTrigger(BootTrigger{})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\BootTrigger", bootTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\ComHandlerAction", comHandlerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +57,7 @@ func TestCreateTask(t *testing.T) {
 			StartBoundary: time.Now(),
 		},
 	})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\DailyTrigger", dailyTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\DailyTrigger", dailyTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,7 +69,7 @@ func TestCreateTask(t *testing.T) {
 	eventTriggerDef.AddTrigger(EventTrigger{
 		Subscription: subscription,
 	})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\EventTrigger", eventTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\EventTrigger", eventTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,16 +78,7 @@ func TestCreateTask(t *testing.T) {
 	idleTriggerDef := taskService.NewTaskDefinition()
 	idleTriggerDef.AddAction(popCalc)
 	idleTriggerDef.AddTrigger(IdleTrigger{})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\IdleTrigger", idleTriggerDef, true)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// test LogonTrigger
-	logonTriggerDef := taskService.NewTaskDefinition()
-	logonTriggerDef.AddAction(popCalc)
-	logonTriggerDef.AddTrigger(LogonTrigger{})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\LogonTrigger", logonTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\IdleTrigger", idleTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +94,7 @@ func TestCreateTask(t *testing.T) {
 			StartBoundary: time.Now(),
 		},
 	})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\MonthlyDOWTrigger", monthlyDOWTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\MonthlyDOWTrigger", monthlyDOWTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -126,7 +109,7 @@ func TestCreateTask(t *testing.T) {
 			StartBoundary: time.Now(),
 		},
 	})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\MonthlyTrigger", monthlyTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\MonthlyTrigger", monthlyTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -135,7 +118,7 @@ func TestCreateTask(t *testing.T) {
 	registrationTriggerDef := taskService.NewTaskDefinition()
 	registrationTriggerDef.AddAction(popCalc)
 	registrationTriggerDef.AddTrigger(RegistrationTrigger{})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\RegistrationTrigger", registrationTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\RegistrationTrigger", registrationTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -146,7 +129,7 @@ func TestCreateTask(t *testing.T) {
 	sessionStateChangeTriggerDef.AddTrigger(SessionStateChangeTrigger{
 		StateChange: TASK_SESSION_LOCK,
 	})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\SessionStateChangeTrigger", sessionStateChangeTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\SessionStateChangeTrigger", sessionStateChangeTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -159,7 +142,7 @@ func TestCreateTask(t *testing.T) {
 			StartBoundary: time.Now(),
 		},
 	})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\TimeTrigger", timeTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\TimeTrigger", timeTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -174,13 +157,13 @@ func TestCreateTask(t *testing.T) {
 			StartBoundary: time.Now(),
 		},
 	})
-	_, _, err = taskService.CreateTask("\\Taskmaster\\WeeklyTrigger", weeklyTriggerDef, true)
+	_, _, err = taskService.CreateTask("\\Sotask\\WeeklyTrigger", weeklyTriggerDef, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// test trying to create task where a task at the same path already exists and the 'overwrite' is set to false
-	_, taskCreated, err := taskService.CreateTask("\\Taskmaster\\TimeTrigger", timeTriggerDef, false)
+	_, taskCreated, err := taskService.CreateTask("\\Sotask\\TimeTrigger", timeTriggerDef, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -198,12 +181,12 @@ func TestUpdateTask(t *testing.T) {
 	defer taskService.Disconnect()
 
 	testTask.Definition.RegistrationInfo.Author = "Big Chungus"
-	_, err = taskService.UpdateTask("\\Taskmaster\\TestTask", testTask.Definition)
+	_, err = taskService.UpdateTask("\\Sotask\\TestTask", testTask.Definition)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	testTask, err = taskService.GetRegisteredTask("\\Taskmaster\\TestTask")
+	testTask, err = taskService.GetRegisteredTask("\\Sotask\\TestTask")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -248,12 +231,12 @@ func TestDeleteTask(t *testing.T) {
 	createTestTask(taskService)
 	defer taskService.Disconnect()
 
-	err = taskService.DeleteTask("\\Taskmaster\\TestTask")
+	err = taskService.DeleteTask("\\Sotask\\TestTask")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	deletedTask, err := taskService.GetRegisteredTask("\\Taskmaster\\TestTask")
+	deletedTask, err := taskService.GetRegisteredTask("\\Sotask\\TestTask")
 	if err == nil {
 		t.Fatal("task shouldn't still exist")
 	}
@@ -269,7 +252,7 @@ func TestDeleteFolder(t *testing.T) {
 	defer taskService.Disconnect()
 
 	var folderDeleted bool
-	folderDeleted, err = taskService.DeleteFolder("\\Taskmaster", false)
+	folderDeleted, err = taskService.DeleteFolder("\\Sotask", false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -277,7 +260,7 @@ func TestDeleteFolder(t *testing.T) {
 		t.Error("folder shouldn't have been deleted")
 	}
 
-	folderDeleted, err = taskService.DeleteFolder("\\Taskmaster", true)
+	folderDeleted, err = taskService.DeleteFolder("\\Sotask", true)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -289,15 +272,15 @@ func TestDeleteFolder(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	taskmasterFolder, err := taskService.GetTaskFolder("\\Taskmaster")
+	SotaskFolder, err := taskService.GetTaskFolder("\\Sotask")
 	if err == nil {
 		t.Fatal("folder shouldn't exist")
 	}
-	if taskmasterFolder.Name != "" {
+	if SotaskFolder.Name != "" {
 		t.Error("folder struct should be defaultly constructed")
 	}
 	for _, task := range tasks {
-		if strings.Split(task.Path, "\\")[1] == "Taskmaster" {
+		if strings.Split(task.Path, "\\")[1] == "Sotask" {
 			t.Error("task should've been deleted")
 		}
 	}

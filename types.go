@@ -1,6 +1,7 @@
+//go:build windows
 // +build windows
 
-package taskmaster
+package sotask
 
 import (
 	"strconv"
@@ -8,7 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-ole/go-ole"
 	"github.com/rickb777/date/period"
 )
 
@@ -788,13 +788,6 @@ type RepetitionPattern struct {
 	StopAtDurationEnd  bool          // indicates if a running instance of the task is stopped at the end of the repetition pattern duration
 }
 
-// BootTrigger triggers the task when the computer boots. Only Administrators can create tasks with a BootTrigger.
-// https://docs.microsoft.com/en-us/windows/desktop/api/taskschd/nn-taskschd-iboottrigger
-type BootTrigger struct {
-	TaskTrigger
-	Delay period.Period // indicates the amount of time between when the system is booted and when the task is started
-}
-
 // DailyTrigger triggers the task on a daily schedule. For example, the task starts at a specific time every day, every other day, or every third day. The time of day that the task is started is set by StartBoundary, which must be set.
 // https://docs.microsoft.com/en-us/windows/desktop/api/taskschd/nn-taskschd-idailytrigger
 type DailyTrigger struct {
@@ -816,14 +809,6 @@ type EventTrigger struct {
 // https://docs.microsoft.com/en-us/windows/desktop/api/taskschd/nn-taskschd-iidletrigger
 type IdleTrigger struct {
 	TaskTrigger
-}
-
-// LogonTrigger triggers the task when a specific user logs on. When the Task Scheduler service starts, all logged-on users are enumerated and any tasks registered with logon triggers that match the logged on user are run.
-// https://docs.microsoft.com/en-us/windows/desktop/api/taskschd/nn-taskschd-ilogontrigger
-type LogonTrigger struct {
-	TaskTrigger
-	Delay  period.Period // indicates the amount of time between when the user logs on and when the task is started
-	UserID string        // the identifier of the user. If left empty, the trigger will fire when any user logs on
 }
 
 // MonthlyDOWTrigger triggers the task on a monthly day-of-week schedule. For example, the task starts on a specific days of the week, weeks of the month, and months of the year. The time of day that the task is started is set by StartBoundary, which must be set.
@@ -948,10 +933,6 @@ func (t TaskTrigger) GetStopAtDurationEnd() bool {
 	return t.StopAtDurationEnd
 }
 
-func (BootTrigger) GetType() TaskTriggerType {
-	return TASK_TRIGGER_BOOT
-}
-
 func (DailyTrigger) GetType() TaskTriggerType {
 	return TASK_TRIGGER_DAILY
 }
@@ -962,10 +943,6 @@ func (EventTrigger) GetType() TaskTriggerType {
 
 func (IdleTrigger) GetType() TaskTriggerType {
 	return TASK_TRIGGER_IDLE
-}
-
-func (LogonTrigger) GetType() TaskTriggerType {
-	return TASK_TRIGGER_LOGON
 }
 
 func (MonthlyDOWTrigger) GetType() TaskTriggerType {

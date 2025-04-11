@@ -1,6 +1,7 @@
+//go:build windows
 // +build windows
 
-package taskmaster
+package sotask
 
 import (
 	"fmt"
@@ -153,11 +154,6 @@ func fillTaskTriggersObj(triggers []Trigger, triggersObj *ole.IDispatch) error {
 		oleutil.MustPutProperty(triggerObj, "StartBoundary", TimeToTaskDate(trigger.GetStartBoundary()))
 
 		switch t := trigger.(type) {
-		case BootTrigger:
-			bootTriggerObj := triggerObj.MustQueryInterface(ole.NewGUID("{2a9c35da-d357-41f4-bbc1-207ac1b1f3cb}"))
-			defer bootTriggerObj.Release()
-
-			oleutil.MustPutProperty(bootTriggerObj, "Delay", t.Delay.String())
 		case DailyTrigger:
 			dailyTriggerObj := triggerObj.MustQueryInterface(ole.NewGUID("{126c5cd8-b288-41d5-8dbf-e491446adc5c}"))
 			defer dailyTriggerObj.Release()
@@ -182,12 +178,6 @@ func fillTaskTriggersObj(triggers []Trigger, triggersObj *ole.IDispatch) error {
 		case IdleTrigger:
 			idleTriggerObj := triggerObj.MustQueryInterface(ole.NewGUID("{d537d2b0-9fb3-4d34-9739-1ff5ce7b1ef3}"))
 			defer idleTriggerObj.Release()
-		case LogonTrigger:
-			logonTriggerObj := triggerObj.MustQueryInterface(ole.NewGUID("{72dade38-fae4-4b3e-baf4-5d009af02b1c}"))
-			defer logonTriggerObj.Release()
-
-			oleutil.MustPutProperty(logonTriggerObj, "Delay", t.Delay.String())
-			oleutil.MustPutProperty(logonTriggerObj, "UserId", t.UserID)
 		case MonthlyDOWTrigger:
 			monthlyDOWTriggerObj := triggerObj.MustQueryInterface(ole.NewGUID("{77d025a3-90fa-43aa-b52e-cda5499b946a}"))
 			defer monthlyDOWTriggerObj.Release()

@@ -1,6 +1,7 @@
+//go:build windows
 // +build windows
 
-package taskmaster
+package sotask
 
 func createTestTask(taskSvc TaskService) RegisteredTask {
 	newTaskDef := taskSvc.NewTaskDefinition()
@@ -10,7 +11,7 @@ func createTestTask(taskSvc TaskService) RegisteredTask {
 	})
 	newTaskDef.Settings.MultipleInstances = TASK_INSTANCES_PARALLEL
 
-	task, _, err := taskSvc.CreateTask("\\Taskmaster\\TestTask", newTaskDef, true)
+	task, _, err := taskSvc.CreateTask("\\Sotask\\TestTask", newTaskDef, true)
 	if err != nil {
 		panic(err)
 	}

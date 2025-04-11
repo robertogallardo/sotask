@@ -1,6 +1,7 @@
+//go:build windows
 // +build windows
 
-package taskmaster
+package sotask
 
 import (
 	"errors"
@@ -47,8 +48,6 @@ func validateActions(actions []Action) error {
 func validateTriggers(triggers []Trigger) error {
 	for _, trigger := range triggers {
 		switch t := trigger.(type) {
-		case BootTrigger:
-			return nil
 		case DailyTrigger:
 			if t.GetStartBoundary() == defaultTime {
 				return errors.New("invalid DailyTrigger: StartBoundary is required")
@@ -64,8 +63,6 @@ func validateTriggers(triggers []Trigger) error {
 
 			return nil
 		case IdleTrigger:
-			return nil
-		case LogonTrigger:
 			return nil
 		case MonthlyDOWTrigger:
 			if t.GetStartBoundary() == defaultTime {

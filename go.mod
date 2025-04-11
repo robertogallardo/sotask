@@ -1,4 +1,4 @@
-module github.com/robertogallardo/taskmaster
+module github.com/robertogallardo/sotask
 
 go 1.12
 

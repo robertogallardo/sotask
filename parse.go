@@ -1,6 +1,7 @@
+//go:build windows
 // +build windows
 
-package taskmaster
+package sotask
 
 import (
 	"errors"
@@ -358,18 +359,6 @@ func parseTaskTrigger(trigger *ole.IDispatch) (Trigger, error) {
 	}
 
 	switch triggerType {
-	case TASK_TRIGGER_BOOT:
-		delay, err := StringToPeriod(oleutil.MustGetProperty(trigger, "Delay").ToString())
-		if err != nil {
-			return nil, fmt.Errorf("error parsing IBootTrigger object: error parsing Delay field: %v", err)
-		}
-
-		bootTrigger := BootTrigger{
-			TaskTrigger: taskTriggerObj,
-			Delay:       delay,
-		}
-
-		return bootTrigger, nil
 	case TASK_TRIGGER_DAILY:
 		daysInterval := DayInterval(oleutil.MustGetProperty(trigger, "DaysInterval").Val)
 		randomDelay, err := StringToPeriod(oleutil.MustGetProperty(trigger, "RandomDelay").ToString())
@@ -420,20 +409,6 @@ func parseTaskTrigger(trigger *ole.IDispatch) (Trigger, error) {
 		}
 
 		return idleTrigger, nil
-	case TASK_TRIGGER_LOGON:
-		delay, err := StringToPeriod(oleutil.MustGetProperty(trigger, "Delay").ToString())
-		if err != nil {
-			return nil, fmt.Errorf("error parsing ILogonTrigger object: error parsing Delay field: %v", err)
-		}
-		userID := oleutil.MustGetProperty(trigger, "UserId").ToString()
-
-		logonTrigger := LogonTrigger{
-			TaskTrigger: taskTriggerObj,
-			Delay:       delay,
-			UserID:      userID,
-		}
-
-		return logonTrigger, nil
 	case TASK_TRIGGER_MONTHLYDOW:
 		daysOfWeek := DayOfWeek(oleutil.MustGetProperty(trigger, "DaysOfWeek").Val)
 		monthsOfYear := Month(oleutil.MustGetProperty(trigger, "MonthsOfYear").Val)
